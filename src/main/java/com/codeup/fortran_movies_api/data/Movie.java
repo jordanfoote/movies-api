@@ -1,22 +1,22 @@
 package com.codeup.fortran_movies_api.data;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name="movies")
 public class Movie {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String title;
     private String year;
-    private String director;
-    private String actors;
-    private String genre;
     private String plot;
 
-    public Movie(int id, String title, String year, String director, String actors, String genre, String plot) {
+    public Movie(int id, String title, String year, String plot) {
         this.id = id;
         this.title = title;
         this.year = year;
-        this.director = director;
-        this.actors = actors;
-        this.genre = genre;
         this.plot = plot;
     }
 
@@ -35,18 +35,6 @@ public class Movie {
         return year;
     }
 
-    public String getDirector() {
-        return director;
-    }
-
-    public String getActors() {
-        return actors;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
     public String getPlot() {
         return plot;
     }
@@ -63,18 +51,6 @@ public class Movie {
         this.year = year;
     }
 
-    public void setDirector(String director) {
-        this.director = director;
-    }
-
-    public void setActors(String actors) {
-        this.actors = actors;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
     public void setPlot(String plot) {
         this.plot = plot;
     }
@@ -85,9 +61,6 @@ public class Movie {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", year='" + year + '\'' +
-                ", director='" + director + '\'' +
-                ", actors='" + actors + '\'' +
-                ", genre='" + genre + '\'' +
                 ", plot='" + plot + '\'' +
                 '}';
     }
