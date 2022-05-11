@@ -66,11 +66,21 @@ CREATE TABLE IF NOT EXISTS movie_actor (
     actor_id INT UNSIGNED NOT NULL,
     FOREIGN KEY (movie_id) REFERENCES movies (id),
     FOREIGN KEY (actor_id) REFERENCES actors (id)
-)
+);
 # 8. Go add DROP IF EXIST statements for movies and directors
 
 # 9. RUN IT!
+CREATE DATABASE IF NOT EXISTS movies_db;
 
+USE movies_db;
+
+CREATE TABLE IF NOT EXISTS movies(
+                                     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                                     title VARCHAR(255) NOT NULL,
+                                     year CHAR(4) NOT NULL,
+                                     plot TEXT,
+                                     PRIMARY KEY (id)
+);
 
 
 

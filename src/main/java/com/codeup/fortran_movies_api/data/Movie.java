@@ -9,8 +9,14 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Column(nullable = false, length = 100)
     private String title;
+
+    @Column(nullable = false, length = 4)
     private String year;
+
+    @Column(nullable = false)
     private String plot;
 
     public Movie(int id, String title, String year, String plot) {

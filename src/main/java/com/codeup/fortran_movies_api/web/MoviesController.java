@@ -2,6 +2,7 @@ package com.codeup.fortran_movies_api.web;
 
 import com.codeup.fortran_movies_api.data.Movie;
 import com.codeup.fortran_movies_api.data.MoviesRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 @RequestMapping("/api/movies")
 public class MoviesController {
 
-    private List<Movie> sampleMovies = setMovies();
+    private List<Movie> movies = setMovies();
 
     private final MoviesRepository moviesRepository;
 
@@ -20,24 +21,24 @@ public class MoviesController {
         this.moviesRepository = moviesRepository;
     }
 
-    @GetMapping
-    public Movie one() {
-        return sampleMovies.get(1);
-    }
-
     @GetMapping("all")
-    public List<Movie> getAll(){
-        return sampleMovies;
+    public List<Movie> getMovies() {
+        return moviesRepository.findAll();
     }
-
 
     @GetMapping("{id}")
     public Movie getById(@PathVariable int id) {
-        return sampleMovies.stream().filter((movie) -> {
-            return movie.getId() == id;
-        })
-                .findFirst()
-                .orElse(null);
+        return moviesRepository.findById(id).orElse(null);
+    }
+
+    @GetMapping("search")
+    public List<Movie> getByTitle(@RequestParam("title") String title) {
+        return moviesRepository.findByTitle(title);
+    }
+
+    @GetMapping("search/year")
+    public List<Movie> getByYearRange(@RequestParam("startYear") int startYear, @RequestParam("endYear") int endYear) {
+        return moviesRepository.findByYearRange(startYear, endYear);
     }
 
     @PostMapping
@@ -47,10 +48,8 @@ public class MoviesController {
 
     @PostMapping("many")
     public void createMany(@RequestBody List<Movie> movies) {
-        sampleMovies.addAll(movies);
+        moviesRepository.saveAll(movies);
     }
-
-
 
     private List<Movie> setMovies() {
         List<Movie> movies = new ArrayList<>();
