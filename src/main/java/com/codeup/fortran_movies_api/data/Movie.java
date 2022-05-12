@@ -3,6 +3,7 @@ package com.codeup.fortran_movies_api.data;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name="movies")
@@ -14,9 +15,14 @@ public class Movie {
     private String title;
     private String year;
     private String plot;
+
     @ManyToOne
     @JsonIgnoreProperties("directedMovies")
     private Director director;
+
+    @ManyToMany(mappedBy = "movies", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("movies")
+    private List<Genre> genres;
 
     public Movie(int id, String title, String year, String plot) {
         this.id = id;
@@ -66,6 +72,10 @@ public class Movie {
 
     public void setDirector(Director director) {
         this.director = director;
+    }
+
+    public List<Genre> getGenres() {
+        return genres;
     }
 
     @Override
