@@ -1,10 +1,15 @@
 package com.codeup.fortran_movies_api.web;
 
+import com.codeup.fortran_movies_api.data.Director;
+import com.codeup.fortran_movies_api.data.DirectorsRepository;
 import com.codeup.fortran_movies_api.data.Movie;
 import com.codeup.fortran_movies_api.data.MoviesRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +18,12 @@ import java.util.List;
 @RequestMapping("/api/movies")
 public class MoviesController {
 
-    private List<Movie> movies = setMovies();
-
     private final MoviesRepository moviesRepository;
+    private final DirectorsRepository directorsRepository;
 
-    public MoviesController(MoviesRepository moviesRepository){
+    public MoviesController(MoviesRepository moviesRepository, DirectorsRepository directorsRepository){
         this.moviesRepository = moviesRepository;
+        this.directorsRepository = directorsRepository;
     }
 
     @GetMapping("all")
@@ -41,23 +46,33 @@ public class MoviesController {
         return moviesRepository.findByYearRange(startYear, endYear);
     }
 
+    @GetMapping("search/director")
+    public List<Director> getByDirector(@RequestParam("name") String directorName){
+        List<Director> directors = directorsRepository.findByName(directorName);
+        return directors;
+    }
+
     @PostMapping
     public void create(@RequestBody Movie movie) {
         moviesRepository.save(movie);
     }
 
-    @PostMapping("many")
-    public void createMany(@RequestBody List<Movie> movies) {
+    @PostMapping("all")
+    public void createAll(@RequestBody List<Movie> movies) {
         moviesRepository.saveAll(movies);
     }
 
-    private List<Movie> setMovies() {
-        List<Movie> movies = new ArrayList<>();
+    @PutMapping
+    public void updateOne(@RequestBody Movie movie){
+        moviesRepository.save(movie);
+    }
 
-        movies.add(new Movie(1, "Gladiator", "2000","A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery."));
-        movies.add(new Movie(2, "The Perfect Storm", "2000","An unusually intense storm pattern catches some commercial fishermen unaware and puts them in mortal danger."));
-        movies.add(new Movie(3, "Superbad", "2007","Two co-dependent high school seniors are forced to deal with separation anxiety after their plan to stage a booze-soaked party goes awry."));
-
-        return movies;
+    @DeleteMapping("{id}")
+    public void deleteById(@PathVariable int id) throws IOException {
+        try {
+            moviesRepository.deleteById(id);
+        } catch (Exception ex) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No matching movie with ID: " + id);
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.codeup.fortran_movies_api.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,15 +11,12 @@ public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(nullable = false, length = 100)
     private String title;
-
-    @Column(nullable = false, length = 4)
     private String year;
-
-    @Column(nullable = false)
     private String plot;
+    @ManyToOne
+    @JsonIgnoreProperties("directedMovies")
+    private Director director;
 
     public Movie(int id, String title, String year, String plot) {
         this.id = id;
@@ -45,6 +44,10 @@ public class Movie {
         return plot;
     }
 
+    public Director getDirector() {
+        return director;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -61,6 +64,10 @@ public class Movie {
         this.plot = plot;
     }
 
+    public void setDirector(Director director) {
+        this.director = director;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -68,6 +75,7 @@ public class Movie {
                 ", title='" + title + '\'' +
                 ", year='" + year + '\'' +
                 ", plot='" + plot + '\'' +
+                ", director=" + director.getName() +
                 '}';
     }
 }
